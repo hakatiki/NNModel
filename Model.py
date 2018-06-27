@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 import time
 
 
-batchsize = 2
-l_r = 0.001
+batchsize = 1
+l_r = 0.01
 eps = 0.9
 
 
@@ -14,7 +14,7 @@ class Model:
         self.weight1 = np.random.randn(neurons, 1)
         self.bias1 = np.random.randn(neurons, 1)
  
-        self.weight2 = np.random.randn(1, neurons)
+        self.weight2 = np.random.randn( 1, neurons)
         self.bias2 = np.random.randn(1)
 
         self.d_weight1_prev = np.zeros((neurons, 1))
@@ -35,34 +35,43 @@ class Model:
         mult1 = x * self.weight1
         add1 = mult1 + self.bias1
         activation1 = np.maximum(0, add1)
-    
+
         mult2 = np.matmul(self.weight2, activation1)
+        
         add2 = mult2 + self.bias2
 
-        loss = np.square(add2 - y)
-        #print(loss)
+        loss = np.mean(np.square(add2 - y))
 
-        d_loss = add2 - y
+        m_d_loss = np.mean(add2 - y)
+        # print(add2 , y)
+        m_activation1 = np.mean(activation1,axis=1)
+        d_bias2 = m_d_loss
+        d_weight2 = m_d_loss * m_activation1
+        d_activation1 = m_d_loss * self.weight2
 
-        d_bias2 = d_loss
-        d_weight2 = d_loss * activation1
-        d_activation1 = d_loss * self.weight2
-
-        d_add1 = np.transpose(np.greater(activation1, 0).astype(int))
-        d_weight1 = d_activation1 * d_add1 * x
+        d_add1 = np.transpose(np.greater(m_activation1, 0).astype(int))
+        d_weight1 = d_activation1 * d_add1 * np.mean(x)
         d_bias1 = d_activation1 * d_add1
 
-        self.bias2 = self.bias2 - d_bias2 * l_r - self.d_bias2_prev * eps
-        self.d_bias2_prev = d_bias2 * l_r + self.d_bias2_prev * eps
+        delta_bias2 = d_bias2 * l_r + self.d_bias2_prev * eps
+        # print(delta_bias2.shape)
+        self.bias2 = self.bias2 - delta_bias2
+        self.d_bias2_prev = delta_bias2
         
-        self.bias1 = self.bias1 - np.transpose(d_bias1) * l_r - self.d_bias1_prev * eps
-        self.d_bias1_prev = np.transpose(d_bias1) * l_r + self.d_bias1_prev * eps
+        delta_bias1 = np.transpose(d_bias1) * l_r + self.d_bias1_prev * eps
+        # print(delta_bias1.shape)
+        self.bias1 = self.bias1 - delta_bias1
+        self.d_bias1_prev = delta_bias1
         
-        self.weight1 = self.weight1 - np.transpose(d_weight1) * l_r - self.d_weight1_prev * eps
-        self.d_weight1_prev=np.transpose(d_weight1) * l_r + self.d_weight1_prev * eps
+        delta_weight1 = np.transpose(d_weight1) * l_r + self.d_weight1_prev * eps
+        # print(delta_weight1.shape)
+        self.weight1 = self.weight1 - delta_weight1
+        self.d_weight1_prev = delta_weight1
         
-        self.weight2 = self.weight2 - np.transpose(d_weight2) * l_r - self.d_weight2_prev * eps
-        self.d_weight2_prev = np.transpose(d_weight2) * l_r + self.d_weight2_prev * eps
+        delta_weight2 = np.transpose(d_weight2) * l_r + self.d_weight2_prev * eps
+        # print(delta_weight2.shape)
+        self.weight2 = self.weight2 - delta_weight2
+        self.d_weight2_prev = delta_weight2
         
         return loss
 
@@ -79,8 +88,8 @@ def Train():
     label_data = np.power(train_data, 0.5)
     for j in range(1000):
         loss = 0
-        for i in range(len(train_data)):
-            loss += model.train(train_data[i], label_data[i])
+        for i in range(0, len(train_data), batchsize):
+            loss += model.train(train_data[i:i+batchsize], label_data[i:i+batchsize])
         print(loss)
         preds2 = []
         for i in valid:
