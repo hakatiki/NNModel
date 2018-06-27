@@ -41,6 +41,7 @@ class Model:
 
         loss = np.square(add2 - y)
         # print loss
+        
         d_loss = add2 - y
 
         d_bias2 = d_loss
