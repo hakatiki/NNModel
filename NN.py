@@ -11,13 +11,14 @@ class NNModel:
         self.layers = []
 
     def add_layer(self, inputs, outputs, func):
-        layer = Layer(inputs, outputs, func, self.l_r)
+        layer = Layer(inputs, outputs, self.l_r, func)
         self.layers.append(layer)
 
     def train(self, x, y):
         output = x
         for i in self.layers:
             output = i.forward_pass(output)
+        output = Func.sigm(output)
         print(output)
         loss = - np.sum(y * np.log(output))
         d_loss = y - output
@@ -26,7 +27,6 @@ class NNModel:
             d_loss = i.backprop(d_loss)
 
         return loss
-    
     def forward_pass(self, x):
         output = x
         for i in self.layers:
@@ -39,12 +39,12 @@ def Train_Model():
     # 28 * 28 == 784
     model.add_layer(28 * 28, 100, Func.relu)
     model.add_layer(100, 111, Func.relu)
-    model.add_layer(111, 2, Func.sigm)
+    model.add_layer(111, 2, Func.identiti)
 
     epoch = 100
     examlpes = 1000
     
-    batch = 1
+    batch = 2
     
     for i in range(epoch):
         train_loss = 0
@@ -62,7 +62,7 @@ def Train_Model():
             if np.argmax(y) == np.argmax(output):
                 correct_guesses += 1
         print('Loss after', i, ':', loss)
-        print('Correct guesses after ', i , ':', correct_guesses)
+        print('Correct guesses after ', i, ':', correct_guesses)
 
 
 Train_Model()

@@ -3,7 +3,7 @@ import Func
 
 class Layer:
 
-    def __init__(self, inputs, outputs, func, l_r):
+    def __init__(self, inputs, outputs, l_r, func):
         self.l_r = l_r
         self.weights = (2 / inputs) * np.random.randn(inputs, outputs)
         self.biases = (2 / inputs) * np.random.randn(1, outputs)

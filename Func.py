@@ -15,5 +15,13 @@ class sigm:
         sum_ = np.sum(np.exp( - x)) + 0.000001
         return exp / sum_
     def d_f(x):
+        return x(1-x)
+
+
+class identiti:
+    def f(x):
         return x
+    def d_f(x):
+        return 1
+
     
