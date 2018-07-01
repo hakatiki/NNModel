@@ -27,6 +27,7 @@ class NNModel:
             d_loss = i.backprop(d_loss)
 
         return loss
+        
     def forward_pass(self, x):
         output = x
         for i in self.layers:
