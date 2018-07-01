@@ -20,6 +20,11 @@ Icon
 .com.apple.timemachine.donotpresent
 
 *.npy
+*.json
+.vscode/*
+*.pyc
+*
+!*.py
 
 # Directories potentially created on remote AFP share
 .AppleDB

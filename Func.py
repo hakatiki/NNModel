@@ -12,8 +12,8 @@ class relu:
 class sigm:
     def f(x):
         exp = np.exp( - x)
-        sum_ = np.sum(np.exp( - x)) + 0.000001
-        return exp / sum_
+        sum_ = np.sum(np.exp( - x),axis=1) + 0.000001
+        return np.divide(exp.T, sum_).T
     def d_f(x):
         return x(1-x)
 

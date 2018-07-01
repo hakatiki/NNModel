@@ -18,7 +18,7 @@ class NNModel:
         output = x
         for i in self.layers:
             output = i.forward_pass(output)
-        output = Func.sigm(output)
+        output = Func.sigm.f(output)
         print(output)
         loss = - np.sum(y * np.log(output))
         d_loss = y - output
