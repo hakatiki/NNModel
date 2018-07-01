@@ -22,7 +22,8 @@ class NNModel:
         print(output)
         loss = - np.sum(y * np.log(output))
         d_loss = y - output
-        print(loss)
+        d_loss = np.mean(d_loss, axis=0).reshape(1, -1)
+        print(d_loss)
         for i in reversed(self.layers):
             d_loss = i.backprop(d_loss)
 
@@ -45,7 +46,7 @@ def Train_Model():
     epoch = 100
     examlpes = 1000
     
-    batch = 2
+    batch = 4
     
     for i in range(epoch):
         train_loss = 0
