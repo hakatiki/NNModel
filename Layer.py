@@ -35,7 +35,7 @@ class Layer:
         self.biases = self.biases - delta_biases
         # Faszom se tudja hogy jó-e, de valószínüleg oké 
         delta_weights = self.l_r * np.matmul(d_act, self.input_vec).T
-        # print('Mean change in weights is:', np.mean(delta_weights))
+        print('Mean change in weights is:', np.mean(delta_weights))
         self.weights = self.weights - delta_weights
         # menő ez is
         d_next_prev = np.matmul(d_act.T, self.weights.T)
