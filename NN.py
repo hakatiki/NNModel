@@ -19,11 +19,11 @@ class NNModel:
         for i in self.layers:
             output = i.forward_pass(output)
         output = Func.sigm.f(output)
-        print(output)
+        # print(output)
         loss = - np.sum(y * np.log(output))
         d_loss = y - output
         d_loss = np.mean(d_loss, axis=0).reshape(1, -1)
-        print(d_loss)
+        # print(d_loss)
         for i in reversed(self.layers):
             d_loss = i.backprop(d_loss)
 
@@ -32,7 +32,7 @@ class NNModel:
     def forward_pass(self, x):
         output = x
         for i in self.layers:
-            output = i.forward_pass(x)
+            output = i.forward_pass(output)
         return output
 
 
@@ -46,7 +46,7 @@ def Train_Model():
     epoch = 100
     examlpes = 1000
     
-    batch = 4
+    batch = 2ó
     
     for i in range(epoch):
         train_loss = 0
@@ -57,14 +57,16 @@ def Train_Model():
 
         loss = 0
         correct_guesses = 0
-        for j in range(examlpes, examlpes + 1000, 1):
-            x, y = LoadData.load_next_batch(1, j)
-            output = model.forward_pass(x)
-            loss += - np.sum(y * np.log(output))
-            if np.argmax(y) == np.argmax(output):
+        x, y = LoadData.load_next_batch(100, 1000)
+        for k in range(len(x)):
+            output = model.forward_pass(x[k])
+            output = Func.sigm.f(output)
+            loss += -np.sum(y[k] * np.log(output))
+            # print(output, y[k])
+            if np.argmax(y[k]) == np.argmax(output):
                 correct_guesses += 1
-        print('Loss after', i, ':', loss)
-        print('Correct guesses after ', i, ':', correct_guesses)
+        print('Loss after', i + 1, ':', loss)
+        print('Correct guesses after ', i+ 1 , ':', correct_guesses)
 
 
 Train_Model()

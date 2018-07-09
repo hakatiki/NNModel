@@ -2,40 +2,23 @@
 import numpy as np
 
 
-# def load_next_batch(batch=100, loaded=0):
-#     arrays = []
-#     data = []
-#     labels = []
-#     apple_data = np.load('apple.npy', 'r')
-#     for i in range(batch//2):
-#         arrays.append([apple_data[i+loaded], [1, 0]])
-#     banana_data = np.load('banana.npy', 'r')
-#     for i in range(batch//2):
-#         arrays.append([banana_data[i+loaded], [0, 1]])
-#     ret_array = np.asarray(arrays)
-#     np.random.shuffle(ret_array)
-#     for k in ret_array:
-#         data.append(k[0])
-#         labels.append(k[1])
-#     return np.asarray(data), np.asarray(labels)
-
-
 def load_next_batch(batch=100, loaded=0):
     arrays = []
     data = []
     labels = []
     apple_data = np.load('apple.npy', 'r')
-    for i in range(batch):
+    for i in range(batch//2):
         arrays.append([apple_data[i+loaded], [1, 0]])
-    # banana_data = np.load('banana.npy', 'r')
-    # for i in range(batch//2):
-    #     arrays.append([banana_data[i+loaded], [0, 1]])
+    banana_data = np.load('banana.npy', 'r')
+    for i in range(batch//2):
+        arrays.append([banana_data[i+loaded], [0, 1]])
     ret_array = np.asarray(arrays)
     np.random.shuffle(ret_array)
     for k in ret_array:
         data.append(k[0])
         labels.append(k[1])
     return np.asarray(data), np.asarray(labels)
+
 
 def create_data():
     num_of_imgs = 50000
