@@ -87,10 +87,11 @@ class Model:
 
 
 def Train():
-    model = NNModel(0.01)
+    model = NNModel(0.1)
     model.add_layer(1, 11, Func.relu)
     model.add_layer(11, 10, Func.relu)
     model.add_layer(10, 1, Func.identiti)
+    model.add_loss_function(Func.squared_loss)
     batchsize = 1
     valid = np.arange(0, 1, 0.01)
     valid_sq = np.power(valid, 2)
@@ -115,4 +116,4 @@ def Train():
     plt.pause(10) 
 
 
-Train()
+# Train()

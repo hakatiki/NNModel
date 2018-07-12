@@ -13,19 +13,26 @@ class NNModel:
     def add_layer(self, inputs, outputs, func):
         layer = Layer(inputs, outputs, self.l_r, func)
         self.layers.append(layer)
+    
+    def add_loss_function(self, func):
+        self.loss_function = func
 
     def train(self, x, y):
         output = x
         for i in self.layers:
             output = i.forward_pass(output)
-        loss = 0
-        output = Func.sigm.f(output)
-        # print('out',output)
-        # print('label',y)
-        loss = -np.sum(y * np.log(output))
-        d_loss = y - output
-        # d_loss = output - y
-        # print(loss)
+        
+        loss = self.loss_function.loss(output, y)
+        d_loss = self.loss_function.d_loss(output, y)
+
+        # loss = 0
+        # output = Func.sigm.f(output)
+        # # print('out',output)
+        # # print('label',y)
+        # loss = -np.sum(y * np.log(output))
+        # d_loss = y - output
+        # # d_loss = output - y
+        # # print(loss)
         for j in reversed(self.layers):
             d_loss = j.backprop(d_loss)
 
@@ -39,12 +46,13 @@ class NNModel:
 
 
 def Train_Model():
-    model = NNModel(0.0001)
+    model = NNModel(0.001)
     # 28 * 28 == 784
     model.add_layer(28 * 28, 10, Func.relu)
     model.add_layer(10, 10, Func.relu)
     model.add_layer(10, 10, Func.relu)
     model.add_layer(10, 2, Func.identiti)
+    model.add_loss_function(Func.cross_entropy_loss)
 
     epoch = 1000
     examples = 1000
@@ -75,4 +83,4 @@ def Train_Model():
 
 
 
-# Train_Model()
+Train_Model()
