@@ -2,8 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 
+from NN import NNModel
+import Func
 
-batchsize = 1
+
 l_r = 0.001
 eps = 0.9
 lam = 0.0001
@@ -85,25 +87,30 @@ class Model:
 
 
 def Train():
-    model = Model(100)
+    model = NNModel(0.01)
+    model.add_layer(1, 11, Func.relu)
+    model.add_layer(11, 10, Func.relu)
+    model.add_layer(10, 1, Func.identiti)
+    batchsize = 1
     valid = np.arange(0, 1, 0.01)
-    valid_sq = np.power(valid, 0.1)
+    valid_sq = np.power(valid, 2)
     
     train_data = np.random.rand(100)
-    label_data = np.power(train_data, 0.1)
-    for j in range(20):
+    label_data = np.power(train_data, 2)
+    
+    for j in range(200):
         loss = 0
         for i in range(0, len(train_data), batchsize):
-            loss += model.train(train_data[i:i+batchsize], label_data[i:i+batchsize])
-        print(loss)
-        preds2 = []
-        for i in valid:
-            preds2.extend(model.forward_pass(i)[0])
+            t_d = train_data[i:i + batchsize].reshape((-1, 1))
+            t_l = label_data[i:i + batchsize].reshape((-1, 1))
+            loss += model.train(t_d, t_l)
+        # print(loss)
+        preds2 = model.forward_pass(valid.reshape((-1, 1)))
+        # print(preds2.reshape((1,-1)))
         plt.clf()
         plt.plot(valid, valid_sq)
         plt.plot(valid, preds2)
         plt.pause(0.5)
-    model.print_w()  
     plt.plot(valid, valid_sq)  
     plt.pause(10) 
 
